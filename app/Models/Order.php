@@ -10,7 +10,7 @@ class Order extends Model
         'customer_id',
         'quantity',
         'total',
-        'status' //Pending, Shipped, Delivered
+        'status' // Pending, Shipped, Delivered
     ];
 
     public function shoes()
@@ -25,8 +25,15 @@ class Order extends Model
         return $this->belongsTo(Customer::class);
     }
 
-    public function payments()
+    public function payment()
     {
         return $this->hasOne(Payment::class);
+    }
+
+    public function calculateTotal()
+    {
+        return $this->shoes->sum(function ($shoe) {
+            return $shoe->pivot->quantity * $shoe->price;
+        });
     }
 }
